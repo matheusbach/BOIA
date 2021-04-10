@@ -41,7 +41,7 @@ namespace BIA_telegram
                 if (e.Message.Text.StartsWith("/novaresposta", StringComparison.OrdinalIgnoreCase))
                 {
                     // mensagem no formato => /novaresposta palavrachave1, palavra chave2, palavrachave3, [...], palavrachave 100 : mensagem de resposta
-                    string mensagem = e.Message.Text.Replace("/novaresposta", "");
+                    string mensagem = e.Message.Text.Replace("/novaresposta", "").Replace("@BradescoBiaBot", "");
 
                     if (mensagem.Split(':').ToList().Count < 2)
                     {
