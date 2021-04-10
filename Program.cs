@@ -18,6 +18,7 @@ namespace BIA_telegram
         static string[] nomes = new[] { "Bia", "Bradesco", "@BradescoBiaBot" };
 
         public static System.Timers.Timer timerSaveFrases = new System.Timers.Timer(5000);
+        public static Telegram.Bot.Types.User getMe;
 
         static async System.Threading.Tasks.Task Main(string[] args)
         {
@@ -28,7 +29,7 @@ namespace BIA_telegram
             botClient.OnMessage += BotClient_OnMessage; ;
             botClient.StartReceiving();
 
-            Telegram.Bot.Types.User getMe = await botClient.GetMeAsync().ConfigureAwait(false);
+            getMe = await botClient.GetMeAsync().ConfigureAwait(false);
             Console.WriteLine(getMe.FirstName + "started");
 
             while (Console.ReadLine() != "stop") { }
@@ -87,14 +88,14 @@ namespace BIA_telegram
                     }
                 }
 
-                else if (e.Message.Chat.Type == Telegram.Bot.Types.Enums.ChatType.Private || nomes.Any(s => e.Message.Text.Contains(s, StringComparison.OrdinalIgnoreCase)))
+                else if (e.Message.Chat.Type == Telegram.Bot.Types.Enums.ChatType.Private || nomes.Any(s => e.Message.Text.Contains(s, StringComparison.OrdinalIgnoreCase)) || (e.Message.ReplyToMessage != null && e.Message.ReplyToMessage.From.Id == getMe.Id))
                 {
                     List<string> resultados = respostas.Where((KeyValuePair<string, List<string>> resposta) => resposta.Value.Any(s => e.Message.Text.Contains(s, StringComparison.OrdinalIgnoreCase))).Select(p => p.Key).ToList();
                     if (resultados.Any())
                     {
                         botClient.SendTextMessageAsync(e.Message.Chat.Id, resultados[new Random().Next(resultados.Count)], Telegram.Bot.Types.Enums.ParseMode.Markdown, true, false, e.Message.Chat.Type == Telegram.Bot.Types.Enums.ChatType.Private ? 0 : e.Message.MessageId);
                     }
-                    else
+                    else if (e.Message.ReplyToMessage == null || (e.Message.ReplyToMessage != null && e.Message.ReplyToMessage.From.Id != getMe.Id))
                     {
                         botClient.SendTextMessageAsync(e.Message.Chat.Id, "Poxa, não entendi o que você disse. Tente perguntar de outra forma, pode dar certo.\n\nPara adicionar uma nova resposta use o comando /novaresposta", Telegram.Bot.Types.Enums.ParseMode.Markdown, true, false, e.Message.Chat.Type == Telegram.Bot.Types.Enums.ChatType.Private ? 0 : e.Message.MessageId);
                     }
