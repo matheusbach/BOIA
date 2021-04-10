@@ -71,11 +71,11 @@ namespace BIA_telegram
                     List<string> resultados = respostas.Where((KeyValuePair<string, List<string>> resposta) => resposta.Value.Any(s => e.Message.Text.Contains(s, StringComparison.OrdinalIgnoreCase))).Select(p => p.Key).ToList();
                     if (resultados.Any())
                     {
-                        botClient.SendTextMessageAsync(e.Message.Chat.Id, resultados[new Random().Next(resultados.Count)], Telegram.Bot.Types.Enums.ParseMode.Markdown, true, false, e.Message.Chat.Type == Telegram.Bot.Types.Enums.ChatType.Private ? 0 : e.Message.MessageId); 
+                        botClient.SendTextMessageAsync(e.Message.Chat.Id, resultados[new Random().Next(resultados.Count)], Telegram.Bot.Types.Enums.ParseMode.Markdown, true, false, e.Message.Chat.Type == Telegram.Bot.Types.Enums.ChatType.Private ? 0 : e.Message.MessageId);
                     }
                     else
                     {
-                        botClient.SendTextMessageAsync(e.Message.Chat.Id, "Poxa, não entendi o que você disse. Tente perguntar de outra forma, pode dar certo.", Telegram.Bot.Types.Enums.ParseMode.Markdown, true, false, e.Message.Chat.Type == Telegram.Bot.Types.Enums.ChatType.Private ? 0 : e.Message.MessageId);
+                        botClient.SendTextMessageAsync(e.Message.Chat.Id, "Poxa, não entendi o que você disse. Tente perguntar de outra forma, pode dar certo.\n\nPara adicionar uma nova resposta use o comando /novaresposta", Telegram.Bot.Types.Enums.ParseMode.Markdown, true, false, e.Message.Chat.Type == Telegram.Bot.Types.Enums.ChatType.Private ? 0 : e.Message.MessageId);
                     }
                 }
             }
