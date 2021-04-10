@@ -62,6 +62,27 @@ namespace BIA_telegram
                         SaveFrasesData();
                     }
                 }
+
+                else if (e.Message.Text.StartsWith("/removeresposta", StringComparison.OrdinalIgnoreCase))
+                {
+                    // mensagem no formato => /novaresposta palavrachave1, palavra chave2, palavrachave3, [...], palavrachave 100 : mensagem de resposta
+                    string mensagem = e.Message.Text.Replace("/removeresposta", "").Replace("@BradescoBiaBot", "");
+
+                    if (mensagem.Length == 0)
+                    {
+                        botClient.SendTextMessageAsync(e.Message.Chat.Id, "não macaquear. Mensagem no formato => /removeresposta mensagem de resposta a remover", Telegram.Bot.Types.Enums.ParseMode.Markdown, true, false, e.Message.Chat.Type == Telegram.Bot.Types.Enums.ChatType.Private ? 0 : e.Message.MessageId);
+                    }
+                    else
+                    {
+                        string mensagemResposta = mensagem.Split(':').Last();
+                        
+                        if (respostas.ContainsKey(mensagemResposta))
+                        {
+                            respostas.Remove(mensagemResposta);
+                        }
+
+                        botClient.SendTextMessageAsync(e.Message.Chat.Id, "resposta removida", Telegram.Bot.Types.Enums.ParseMode.Markdown, true, false, e.Message.Chat.Type == Telegram.Bot.Types.Enums.ChatType.Private ? 0 : e.Message.MessageId);
+
                         SaveFrasesData();
                     }
                 }
