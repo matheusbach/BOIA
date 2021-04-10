@@ -52,7 +52,16 @@ namespace BIA_telegram
                         string mensagemResposta = mensagem.Split(':').Last();
                         List<string> palavrasChave = mensagem.Split(':')[0].Split(',').Select(s => s.Trim(' ')).Select(s => Regex.Replace(s, @"(?<=^|,) +| +(?=,|$)", "")).ToList();
 
-                        respostas.TryAdd(mensagemResposta, palavrasChave);
+                        if (!respostas.ContainsKey(mensagemResposta))
+                        {
+                            respostas.TryAdd(mensagemResposta, palavrasChave);
+                        }
+
+                        botClient.SendTextMessageAsync(e.Message.Chat.Id, "resposta cadastrada", Telegram.Bot.Types.Enums.ParseMode.Markdown, true, false, e.Message.Chat.Type == Telegram.Bot.Types.Enums.ChatType.Private ? 0 : e.Message.MessageId);
+
+                        SaveFrasesData();
+                    }
+                }
                         SaveFrasesData();
                     }
                 }
